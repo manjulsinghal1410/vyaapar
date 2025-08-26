@@ -54,7 +54,7 @@ router.post('/signup', async (req: Request, res: Response) => {
     // Hash password
     const passwordHash = await hashPassword(password);
 
-    // Create user
+    // Create user - convert string hash to Buffer for BYTEA column
     const userId = randomUUID();
     const now = new Date();
     
@@ -62,7 +62,7 @@ router.post('/signup', async (req: Request, res: Response) => {
       `INSERT INTO users (id, phone_e164, password_hash, created_at, password_updated_at)
        VALUES ($1, $2, $3, $4, $5)
        RETURNING id`,
-      [userId, phoneE164, passwordHash, now, now]
+      [userId, phoneE164, Buffer.from(passwordHash), now, now]
     );
 
     if (!newUser) {
