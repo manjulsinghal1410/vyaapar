@@ -247,7 +247,14 @@
                     body: JSON.stringify({ phone, password })
                 });
                 const data = await response.json();
-                showMessage(response.ok ? 'Login successful!' : data.error, response.ok ? 'success' : 'error');
+                if (response.ok) {
+                    showMessage('Login successful! Redirecting...', 'success');
+                    if (data.redirectTo) {
+                        setTimeout(() => window.location.href = data.redirectTo, 1000);
+                    }
+                } else {
+                    showMessage(data.error, 'error');
+                }
             } catch (error) {
                 showMessage('Connection error', 'error');
             }
@@ -274,7 +281,14 @@
                     body: JSON.stringify({ phone, password })
                 });
                 const data = await response.json();
-                showMessage(response.ok ? 'Account created!' : data.error, response.ok ? 'success' : 'error');
+                if (response.ok) {
+                    showMessage('Account created! Redirecting...', 'success');
+                    if (data.redirectTo) {
+                        setTimeout(() => window.location.href = data.redirectTo, 1000);
+                    }
+                } else {
+                    showMessage(data.error, 'error');
+                }
             } catch (error) {
                 showMessage('Connection error', 'error');
             }
