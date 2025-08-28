@@ -4,6 +4,7 @@ import cors from 'cors';
 import path from 'path';
 import { config } from './config';
 import authRouter from './routes/auth';
+import dashboardRouter from './routes/dashboard';
 import { signupRateLimit, loginRateLimit } from './middleware/rate-limit';
 
 const app = express();
@@ -28,6 +29,9 @@ app.post('/auth/login', loginRateLimit);
 
 // Auth routes
 app.use('/auth', authRouter);
+
+// Dashboard routes (protected)
+app.use('/dashboard', dashboardRouter);
 
 // 404 handler
 app.use((_req: Request, res: Response) => {

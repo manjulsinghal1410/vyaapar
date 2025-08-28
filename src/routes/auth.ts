@@ -79,9 +79,10 @@ router.post('/signup', async (req: Request, res: Response) => {
     const countryCode = getCountryCodeFromE164(phoneE164) || undefined;
     logger.metric('auth.signup.success', { userId, countryCode });
 
-    // Return success
+    // Return success with redirect
     return res.status(201).json({
       userId,
+      redirectTo: '/dashboard'
     });
   } catch (error) {
     logger.error('Signup error', error as Error);
@@ -196,6 +197,7 @@ router.post('/login', async (req: Request, res: Response) => {
 
     return res.status(200).json({
       message: 'Login successful',
+      redirectTo: '/dashboard'
     });
   } catch (error) {
     logger.error('Login error', error as Error);
