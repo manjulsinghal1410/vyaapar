@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { db } from '../utils/db';
+import { queryOne } from '../db/pool';
 
 export interface AuthenticatedRequest extends Request {
   user?: {
@@ -22,7 +22,7 @@ export async function requireAuth(req: AuthenticatedRequest, res: Response, next
   
   try {
     // Verify session exists and is not expired
-    const result = await db.query(
+    const session = await queryOne<{user_id: string, phone: string}>(
       `SELECT s.id, s.user_id, s.expires_at, u.phone_e164 as phone
        FROM sessions s
        JOIN users u ON s.user_id = u.id
@@ -32,7 +32,7 @@ export async function requireAuth(req: AuthenticatedRequest, res: Response, next
       [sessionId]
     );
     
-    if (result.rows.length === 0) {
+    if (!session) {
       // Session invalid or expired
       res.clearCookie('sid');
       
@@ -44,8 +44,8 @@ export async function requireAuth(req: AuthenticatedRequest, res: Response, next
     
     // Attach user info to request
     req.user = {
-      id: result.rows[0].user_id,
-      phone: result.rows[0].phone
+      id: session.user_id,
+      phone: session.phone
     };
     
     next();
