@@ -1,6 +1,6 @@
-const { Pool } = require('pg');
-const crypto = require('crypto');
-const argon2 = require('argon2');
+import { Pool } from 'pg';
+import crypto from 'crypto';
+import argon2 from 'argon2';
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -13,7 +13,7 @@ function validateAndNormalizePhone(phone) {
     return { isValid: false, error: 'Phone number is required.' };
   }
   
-  const cleaned = phone.replace(/[\s()\-.\[\]]/g, '');
+  const cleaned = phone.replace(/[\s()\-.[\]]/g, '');
   
   if (!/^\+?[1-9]\d{1,14}$/.test(cleaned)) {
     return { isValid: false, error: 'Invalid phone format.' };
@@ -45,7 +45,7 @@ function validatePasswordStrength(password) {
   return { isValid: true };
 }
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   // Only allow POST
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
