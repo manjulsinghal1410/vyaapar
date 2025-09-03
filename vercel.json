@@ -13,12 +13,5 @@
       "source": "/dashboard/:path*",
       "destination": "/api/dashboard/:path*"
     }
-  ],
-  "env": {
-    "DATABASE_URL": "@database_url",
-    "SESSION_TTL_DAYS": "14",
-    "ARGON2_MEMORY_MB": "64",
-    "ARGON2_ITERATIONS": "2",
-    "ARGON2_PARALLELISM": "1"
-  }
+  ]
 }
